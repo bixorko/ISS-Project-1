@@ -112,13 +112,13 @@ def find_word_in_sentence(sentence_wav, query1_wav, query2_wav):
 
 
 ###MAIN###
-#find_word_in_sentence('sa1.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('sa2.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('si1306.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('si1936.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('si676.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('sx136.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sa1.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sa2.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('si1306.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('si1936.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('si676.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sx136.wav', 'q1.wav', 'q2.wav')
 find_word_in_sentence('sx226.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('sx316.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('sx406.wav', 'q1.wav', 'q2.wav')
-#find_word_in_sentence('sx46.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sx316.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sx406.wav', 'q1.wav', 'q2.wav')
+find_word_in_sentence('sx46.wav', 'q1.wav', 'q2.wav')
