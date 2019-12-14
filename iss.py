@@ -1,5 +1,6 @@
 #!/usr/bin/python3.6
 # -*- coding: utf-8 -*-
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import soundfile as sf
@@ -77,23 +78,20 @@ def count_pearson_coeficients(sentence_wav, query1_wav, query2_wav):
     query2, transposed_query2, t3 = analyze_wav_file(query2_wav)
 
     score1 = []
-    print(len(t1))
-    print(len(t2))
-    print(len(t3))
     for i1 in range(len(t1)-len(t2)):
         summary1 = 0
         for j1 in range(len(t2)):
-            tosummary1, useless1 = stats.pearsonr(transposed_feature[i1 + j1], transposed_query1[j1])
+            tosummary1, useless1 = stats.pearsonr(transposed_query1[j1], transposed_feature[i1+j1])
             summary1 += tosummary1
-        score1.append(summary1)
+        score1.append(summary1/transposed_query1.shape[0])
 
     score2 = []
     for i2 in range(len(t1) - len(t3)):
         summary2 = 0
         for j2 in range(len(t3)):
-            tosummary2, useless2 = stats.pearsonr(transposed_feature[i2+j2], transposed_query2[j2])
+            tosummary2, useless2 = stats.pearsonr(transposed_query2[j2], transposed_feature[i2+j2])
             summary2 += tosummary2
-        score2.append(summary2)
+        score2.append(summary2/transposed_query2.shape[0])
 
     return score1, score2
 
@@ -105,6 +103,7 @@ def find_word_in_sentence(sentence_wav, query1_wav, query2_wav):
     plt.legend()
     plt.gca().set_ylabel('Scores')
     plt.gca().set_xlabel('t [s]')
+    plt.ylim(top=1.0)
     axes = plt.gca()
     axes.set_xlim([0, 5])
     plt.tight_layout()
