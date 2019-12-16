@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import soundfile as sf
 from scipy.signal import spectrogram, lfilter, freqz, tf2zpk
 from scipy import stats
+import scipy.io.wavfile
 
 
 def analyze_wav_file(wav_file):
@@ -73,25 +74,37 @@ def analyze_wav_file(wav_file):
 
 
 def count_pearson_coeficients(sentence_wav, query1_wav, query2_wav):
+    sentence_data, fs = sf.read(sentence_wav)
+    query1_data, fs = sf.read(query1_wav)
+    query2_data, fs = sf.read(query2_wav)
+
     feature, transposed_feature, t1 = analyze_wav_file(sentence_wav)
     query1, transposed_query1, t2 = analyze_wav_file(query1_wav)
     query2, transposed_query2, t3 = analyze_wav_file(query2_wav)
 
     score1 = []
+    first1 = 0
     for i1 in range(len(t1)-len(t2)):
         summary1 = 0
         for j1 in range(len(t2)):
             tosummary1, useless1 = stats.pearsonr(transposed_query1[j1], transposed_feature[i1+j1])
             summary1 += tosummary1
         score1.append(summary1/transposed_query1.shape[0])
+        if summary1/transposed_query1.shape[0] >= 0.90 and first1 == 0:
+            scipy.io.wavfile.write('./hits/q1_{}.wav'.format(sentence_wav), fs, sentence_data[i1*10*16:i1*10*16+len(query1_data)])
+            first1 += 1
 
     score2 = []
+    first2 = 0
     for i2 in range(len(t1) - len(t3)):
         summary2 = 0
         for j2 in range(len(t3)):
             tosummary2, useless2 = stats.pearsonr(transposed_query2[j2], transposed_feature[i2+j2])
             summary2 += tosummary2
         score2.append(summary2/transposed_query2.shape[0])
+        if summary2/transposed_query2.shape[0] >= 0.90 and first2 == 0:
+            scipy.io.wavfile.write('./hits/q2_{}.wav'.format(sentence_wav), fs, sentence_data[i2*10*16:i2*10*16+len(query2_data)])
+            first2 += 1
 
     return score1, score2
 
