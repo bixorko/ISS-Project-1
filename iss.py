@@ -19,6 +19,19 @@ def analyze_wav_file(wav_file):
     #dlzka = 25ms prekrytie = woverlap [15ms]
     f, t, sgr = spectrogram(s, fs, window='hamming', nperseg=int(wlen), noverlap=woverlap, nfft=511)
 
+    plt.clf()
+    t_1 = np.arange(s.size) / fs
+    plt.figure(figsize=(6, 3))
+    plt.plot(t_1, s)
+    plt.gca().set_ylabel('Signal')
+    plt.gca().set_xlabel('$t[s]$')
+    plt.gca().set_title('"Development" and "Psychological" vs. {}'.format(wav_file))
+    axes = plt.gca()
+    axes.set_xlim([0, len(t) / 100])
+    plt.tight_layout()
+    plt.savefig('{}_analyse.jpg'.format(wav_file))
+    plt.clf()
+
     sgr_log = 10 * np.log10(sgr + 1e-20)
     features = np.zeros((16, len(t)))
     help_for_features_spectogram = list(range(16))
@@ -34,7 +47,6 @@ def analyze_wav_file(wav_file):
             j = start
             i = i + 1
 
-
     #naplnenie zredukovaneho spektogramu
     row_new = 0
     row_old = 0
@@ -42,7 +54,6 @@ def analyze_wav_file(wav_file):
         fill_features_array(row_old, row_old+15, row_new)
         row_old += 16
         row_new += 1
-
 
     #transpose aby sme mohli do pearsona posielat stlpce tak ako potrebujeme
     transpose_for_pearson = np.transpose(features)
@@ -106,11 +117,11 @@ def count_pearson_coeficients(sentence_wav, query1_wav, query2_wav):
             scipy.io.wavfile.write('./hits/q2_{}.wav'.format(sentence_wav), fs, sentence_data[i2*10*16:i2*10*16+len(query2_data)])
             first2 += 1
 
-    return score1, score2
+    return score1, score2, t1
 
 
 def find_word_in_sentence(sentence_wav, query1_wav, query2_wav):
-    score1, score2 = count_pearson_coeficients(sentence_wav, query1_wav, query2_wav)
+    score1, score2, t1 = count_pearson_coeficients(sentence_wav, query1_wav, query2_wav)
     plt.plot(np.arange(len(score1)) / 100, score1, label='Development')
     plt.plot(np.arange(len(score2)) / 100, score2, label='Psychological')
     plt.legend()
@@ -118,7 +129,7 @@ def find_word_in_sentence(sentence_wav, query1_wav, query2_wav):
     plt.gca().set_xlabel('t [s]')
     plt.ylim(top=1.0)
     axes = plt.gca()
-    axes.set_xlim([0, 5])
+    axes.set_xlim([0, len(t1)/100])
     plt.tight_layout()
     plt.savefig('{}_final.jpg'.format(sentence_wav))
 
